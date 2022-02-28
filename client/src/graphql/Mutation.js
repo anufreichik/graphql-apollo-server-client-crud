@@ -17,7 +17,7 @@ export const ADD_TODO = gql`
     }
 `;
 
-export const EDIT_TODO = gql`
+export const UPDATE_TODO = gql`
     mutation UpdateTodo($id: ID!,$title: String!, $details:String!, $date:Date) {
         updateTodo(id:$id, title: $title, details:$details, date:$date ) {
             id

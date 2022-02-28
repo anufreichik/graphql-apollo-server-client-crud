@@ -36,7 +36,7 @@ const Demo = styled('div')(({ theme }) => ({
 function TodoList() {
     const {loading, error, data} = useQuery(GET_TODOS);
     const [deleteTodo] = useMutation(DELETE_TODO);
-
+    const [currentTodo, setCurrentTodo] = useState(undefined);
     const [dense, setDense] = React.useState(false);
     const [open, setOpen] = React.useState(false);
     const [action, setAction] = useState('CREATE');
@@ -52,6 +52,12 @@ function TodoList() {
     const handleClose = () => {
         setOpen(false);
     };
+
+    const handleUpdateTodo=(todo)=>{
+        setAction('UPDATE');
+        setCurrentTodo(todo);
+        setOpen(true);
+    }
     const handleDeleteToDo=(id)=>{
        deleteTodo({
            variables: {
@@ -80,7 +86,7 @@ function TodoList() {
                     <Button variant="text" onClick={()=>handleClickOpen('CREATE')}>Create ToDo</Button>
                     <Dialog open={open} onClose={handleClose}>
                         <DialogTitle>{`${action} TODO`}</DialogTitle>
-                            <TodoForm action={action} handleClose={handleClose}/>
+                            <TodoForm action={action} handleClose={handleClose} todo={currentTodo}/>
                     </Dialog>
                     <Demo>
                         <List dense={dense}>
@@ -90,7 +96,7 @@ function TodoList() {
                                      <>
 
                                          <IconButton edge="end" aria-label="delete">
-                                             <EditIcon />
+                                             <EditIcon  onClick={()=>handleUpdateTodo(todo)}/>
                                          </IconButton>
                                          <IconButton edge="end" aria-label="delete" onClick={()=>handleDeleteToDo(todo.id)}>
                                              <DeleteIcon />

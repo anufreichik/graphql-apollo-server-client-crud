@@ -1,7 +1,44 @@
 import React from 'react';
-import {Box, Button, Container, DialogActions, DialogContent, TextField} from "@mui/material";
+import {Box, Button, CircularProgress, Container, DialogActions, DialogContent, TextField} from "@mui/material";
+import {useMutation} from "@apollo/client";
+import {ADD_TODO, UPDATE_TODO} from "../graphql/Mutation";
+import {GET_TODOS} from "../graphql/Query";
 
 function TodoForm({action, handleClose, todo}) {
+    const [addTodo, { loading, error}] = useMutation(ADD_TODO);
+    const [updateTodo, {loading: updateLoading, error: updateError}] = useMutation(UPDATE_TODO);
+
+    if(loading || updateLoading) return <CircularProgress/>
+    if(error) return <div>{error.message}</div>
+    if(updateError) return <div>{updateError.message}</div>
+
+
+    const handleSave = () => {
+        switch (action) {
+            case 'CREATE':
+                addTodo({
+                    variables:
+                        {title: "Dinner1", details: "dinner details1", date: "2022-02-23"},
+                    refetchQueries: [
+                        {query: GET_TODOS}
+                    ]
+                });
+                break;
+            case 'UPDATE':
+                updateTodo({
+                    variables:
+                        {id:todo.id, title: "Dinner1", details: "dinner details1", date: "2022-02-23"},
+                    refetchQueries: [
+                        {query: GET_TODOS}
+                    ]
+                });
+                break;
+            default:
+                break;
+
+        }
+        handleClose();
+    }
     return (
         <Container component="main" maxWidth="xs">
             <Box
@@ -38,7 +75,7 @@ function TodoForm({action, handleClose, todo}) {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button type="submit">Save</Button>
+                    <Button type="submit" onClick={handleSave}>Save</Button>
                 </DialogActions>
 
 
