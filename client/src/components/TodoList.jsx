@@ -45,7 +45,8 @@ function TodoList() {
     if(error) return <div>{error.message}</div>;
 
     const handleClickOpen = (action) => {
-        setAction(action)
+        setAction(action);
+        setCurrentTodo(undefined);
         setOpen(true);
     };
 
@@ -95,8 +96,8 @@ function TodoList() {
                                     secondaryAction={
                                      <>
 
-                                         <IconButton edge="end" aria-label="delete">
-                                             <EditIcon  onClick={()=>handleUpdateTodo(todo)}/>
+                                         <IconButton edge="end" aria-label="delete" onClick={()=>handleUpdateTodo(todo)}>
+                                             <EditIcon  />
                                          </IconButton>
                                          <IconButton edge="end" aria-label="delete" onClick={()=>handleDeleteToDo(todo.id)}>
                                              <DeleteIcon />
